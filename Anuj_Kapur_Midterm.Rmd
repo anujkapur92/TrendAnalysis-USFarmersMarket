@@ -1,0 +1,170 @@
+---
+title: "Anuj_Kapur_Midterm"
+author: "Anuj Kapur"
+date: "October 20, 2019"
+output: pdf_document
+---
+
+
+```{r}
+####Question 1
+
+library(usmap)
+library(dplyr)
+library(openintro)
+farmers <- read.csv("farmers_market_info.csv",sep=",",stringsAsFactors = FALSE)
+df1 <- farmers[c(2,9,10,11,12,21,22)]
+
+group.by.state <- df1 %>%
+  group_by(State) %>%
+  summarise(Markets=n())%>%
+  arrange(desc(State))
+
+group.by.state <- group.by.state[-c(14),]
+group.by.state$state <- state2abbr(group.by.state$State)
+
+ggplot(group.by.state, aes(x = reorder(State, Markets), y=Markets)) + geom_bar(stat = "identity", fill="lightblue") + labs(x="States", y="Number of farmer markets", title = "Number of farmer markets in every state of US") + coord_flip()+theme(plot.title = element_text(face = "bold", size = 15)) + geom_text(stat = "identity", aes(label = Markets), size = 3, hjust = 1.1, vjust = 0.25)
+
+plot_usmap(data = group.by.state, values = "Markets") + 
+  scale_fill_continuous(name = "Markets distribution per state", low = "lightblue", high = "darkblue") + 
+  labs(title = "Distribution of farmers market per state in the United States") + theme(legend.position = "right", plot.title= element_text(face = "bold", size = 15, hjust = -1, vjust = 2))
+```
+
+```{r}
+####Question 2
+
+library(DescTools)
+library(lubridate)
+farmers1 <- subset(farmers, Season1Date != c(""))
+splitt <- data.frame(do.call('rbind', strsplit(as.character(farmers1$Season1Date), " to ", fixed = TRUE)))
+farmers2 <- cbind(farmers1, splitt)
+farmers3 <- subset(farmers2, X1 %like% "%/%")
+farmers3$StartDate <- as.Date(farmers3$X1, format = "%m/%d/%Y")
+farmersNew <- farmers3[,c(2,62)]
+
+farmers3$Year <- year(farmers3$StartDate)
+farmers3$Month <- month(farmers3$StartDate)
+
+#By Years - Evolution
+farmers.ts <- farmers3 %>%
+  group_by(Year) %>%
+  summarise("Number of Markets"=n()) %>%
+  arrange(Year)
+
+farmers.ts <- subset(farmers.ts, !is.na(Year))
+farmers.ts <- subset(farmers.ts, Year <= Year(Sys.Date()))
+
+
+ggplot(farmers.ts, aes(x=factor(Year), y=`Number of Markets`, group=1)) + geom_line() + geom_area(fill = "lightblue") + scale_x_discrete(labels = c("2010","2011","2012","2013","2014","2015","2016","2017","2018","2019")) + labs(x="Years", y="Number of farmer markets", title = "Evolution of US farmer markets since 2010") + theme(plot.title = element_text(face = "bold", size = 15, hjust = 0.4))
+
+#By months - Seasonality
+farmers.month <- farmers3 %>%
+  group_by(Month)%>%
+  summarise(FarmerMarket = n()) %>%
+  arrange(Month)
+
+farmers.month <- subset(farmers.month, !is.na(Month))
+
+ggplot(farmers.month, aes(x=as.factor(Month), y=FarmerMarket, group=1)) + geom_area(fill = "lightblue") + geom_line() + scale_x_discrete(labels = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")) + labs(x="Months", y="Number of farmer markets", title = "Effect of seasons on US farmer markets") + theme(plot.title = element_text(face = "bold", size = 15, hjust = 0.4))
+```
+
+```{r}
+####Question 3
+library(treemap)
+
+Food <- farmers[,c(11,29:58)]
+Food1 <- reshape2::melt(Food, id.vars = "State")
+food3 <- subset(Food1, value == "Y")
+food3$product <- tolower(food3$variable)
+
+foodMap <- food3 %>%
+  group_by(product) %>%
+  summarise(count=n())
+
+ggplot(foodMap, aes(x = reorder(product, count), y = count)) + geom_bar(stat = "identity", fill = "lightblue") + coord_flip() + labs(x="Product Type", y="Number of Products",title="Variation of count for each type of product") + theme(plot.title = element_text(face = "bold", size = 15, hjust = 0.1)) + geom_text(stat = "identity", aes(label = count), size = 3, hjust = 1.1, vjust = 0.25)
+
+#2
+
+animal <- c("meat","poultry","seafood","eggs","cheese","honey")
+others <- c("organic","bakedgoods","crafts","prepared","soap","petfood")
+
+foodMap$type <- ifelse(foodMap$product %in% animal, "Animal based",ifelse(foodMap$product %in% others, "Other", "Plant based"))
+
+foodMap2 <- foodMap %>%
+  group_by(type) %>%
+  summarise(sumCount=sum(count)) %>%
+  arrange(desc(sumCount))
+
+treemap(foodMap, index = c("type", "product"), vSize = "count", title="Farmer market's distribution of different products with product types", fontsize.title = 15, fontcolor.labels=c("black","black"), fontsize.labels = c(15,10), align.labels = list(c("centre","centre"),c("left","top")), fontface.labels=c(2,2))
+
+ggplot(foodMap2, aes(x = reorder(type, -sumCount), y = sumCount)) + geom_bar(stat = "identity", fill = "lightblue") + labs(x="Variety of Products", y="Count of Varities",title="Variation of count for each variety of product") + theme(plot.title = element_text(face = "bold", size = 15, hjust = 0.4)) + geom_text(stat = "identity", aes(label = sumCount), size = 5, vjust = 1.4)
+
+```
+
+```{r}
+####Question 4
+
+Modes <- farmers[,c(11,24,25,26,27,28)]
+Modes1 <- reshape2::melt(Modes, id.vars = "State")
+
+Modes2 <- subset(Modes1, value == "Y")
+
+Payment <- Modes2 %>%
+  group_by(variable) %>%
+  summarise(count = n()) %>%
+  arrange(as.character(variable))
+
+ggplot(Payment, aes(x=reorder(variable, -count), y=count)) + geom_bar(stat = "identity", fill = "lightblue") + labs(x="Types of payment modes", y="Count of payment options",title="Availability of payment methods") + theme(plot.title = element_text(face = "bold", size = 15, hjust = 0.1)) + theme(plot.title= element_text(face = "bold", size = 15, hjust = 0.5, vjust = 1)) + geom_text(stat = "identity", aes(label = count), size = 5, vjust = 1.4)
+```
+
+```{r}
+####Question 5
+#What mode of payment has a majority in which region?
+
+Modes5 <- subset(Modes2, State != "Puerto Rico")
+Modes5$state <- state2abbr(Modes5$State)
+
+NE.name <- c("Connecticut","Maine","Massachusetts","New Hampshire",
+             "Rhode Island","Vermont","New Jersey","New York",
+             "Pennsylvania")
+NE.abrv <- c("CT","ME","MA","NH","RI","VT","NJ","NY","PA")
+NE.ref <- c(NE.name,NE.abrv)
+
+MW.name <- c("Indiana","Illinois","Michigan","Ohio","Wisconsin",
+             "Iowa","Kansas","Minnesota","Missouri","Nebraska",
+             "North Dakota","South Dakota")
+MW.abrv <- c("IN","IL","MI","OH","WI","IA","KS","MN","MO","NE",
+             "ND","SD")
+MW.ref <- c(MW.name,MW.abrv)
+
+S.name <- c("Delaware","District of Columbia","Florida","Georgia",
+            "Maryland","North Carolina","South Carolina","Virginia",
+            "West Virginia","Alabama","Kentucky","Mississippi",
+            "Tennessee","Arkansas","Louisiana","Oklahoma","Texas")
+S.abrv <- c("DE","DC","FL","GA","MD","NC","SC","VA","WV","AL",
+            "KY","MS","TN","AR","LA","OK","TX")
+S.ref <- c(S.name,S.abrv)
+
+W.name <- c("Arizona","Colorado","Idaho","New Mexico","Montana",
+            "Utah","Nevada","Wyoming","Alaska","California",
+            "Hawaii","Oregon","Washington")
+W.abrv <- c("AZ","CO","ID","NM","MT","UT","NV","WY","AK","CA",
+            "HI","OR","WA")
+W.ref <- c(W.name,W.abrv)
+
+region.list <- list(
+  Northeast=NE.ref,
+  Midwest=MW.ref,
+  South=S.ref,
+  West=W.ref)
+
+Modes5$region <- sapply(Modes5$state, 
+                 function(x) names(region.list)[grep(x,region.list)])
+
+Modes5count <- Modes5 %>%
+  group_by(region,variable) %>%
+  summarise(sumCount5=n())
+
+ggplot(Modes5count, aes(fill=variable, y=sumCount5, x=region)) + 
+    geom_bar(position="dodge", stat="identity") + labs(x="Regions", y="Count of payment mode", fill="Modes of payment", title = "Distribution of payment modes based on region") + theme(plot.title= element_text(face = "bold", size = 15, hjust = 0, vjust = 2))
+```
