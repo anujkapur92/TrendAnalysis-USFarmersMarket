@@ -9,10 +9,11 @@ output: pdf_document
 ```{r}
 ####Question 1
 
+library(ggplot2)
 library(usmap)
 library(dplyr)
 library(openintro)
-farmers <- read.csv("farmers_market_info.csv",sep=",",stringsAsFactors = FALSE)
+farmers <- read.csv("C:/Users/Anuj Kapur/Desktop/midterm/farmers_market_info.csv",sep=",",stringsAsFactors = FALSE)
 df1 <- farmers[c(2,9,10,11,12,21,22)]
 
 group.by.state <- df1 %>%
