@@ -21,10 +21,25 @@ Split the season's dates to pick the date when the season starts and then displa
 
 There has been a substantial increase in the farmer markets after 2012, peaking at the year of 2014 and then at the year of 2016, but has been declining since then.
 
-##Month-wise seasonality effect
+## Month-wise seasonality effect
 Used the ggplot library to show the effect of seasons on the farmers market throughout the year.
 
 ![alt-tag](https://user-images.githubusercontent.com/42359693/68339254-36b17680-00b2-11ea-98bb-2d606ec51734.png)
 
 The months of May and June show the highest number of farmer markets throughout the year. We can infer that the Summer season has a positive effect on the count of farmer markets, possibly due to the weather’s effect on the harvesting yield of the crops.
 
+## Product Types
+Used the ggplot library to show the number of products being supplied by the farmers market.
+
+![alt-tag](https://user-images.githubusercontent.com/42359693/68339446-9740b380-00b2-11ea-9d6f-cb94792d2ae0.png)
+
+There are 30 types of products being sold in the farmers market. The highest sale in numbers was made by vegetables (5792), followed by bakedgoods (5251) and then by fruits (4905). The least sale in count was made by tofu (235).
+
+Treemap library is used to create a treemap of the different product types.
+
+![alt-tag](https://user-images.githubusercontent.com/42359693/68339677-0c13ed80-00b3-11ea-8303-e9411177b594.png)
+
+The products of the entire farmers market can be sub-grouped into multiple types. We choose to divide them into the following 3 types:
+1.	Plant-based group
+2.	Animal-based group
+3.	Others (Neither plant-based nor animal-based)
