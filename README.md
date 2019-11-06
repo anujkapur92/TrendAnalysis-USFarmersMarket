@@ -60,3 +60,9 @@ Used the grouped bar plot to show the comparison of different payment methods pr
 ![alt-tag](https://user-images.githubusercontent.com/42359693/68340157-e1766480-00b3-11ea-8e33-985365cf4fd0.png)
 
 Throughout all the regions of United States in a span of 10 years, ‘Payment by credit’ is the most provided modes of payment in the farmers market.
+
+## Acknowledgements
+
+R Core Team (2013). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL http://www.R-project.org/.
+
+R Packages used : dplyr, usmap, ggplot2, lubridate, openintro, treemap
