@@ -43,3 +43,20 @@ The products of the entire farmers market can be sub-grouped into multiple types
 1.	Plant-based group
 2.	Animal-based group
 3.	Others (Neither plant-based nor animal-based)
+
+![alt-tag](https://user-images.githubusercontent.com/42359693/68339854-5bf2b480-00b3-11ea-968d-ca326d68de45.png)
+
+The plant-based group sells the maximum number of products in the farmers market, the least being sold by animal-based group, in the duration of 10 years.
+
+## Payment Methods
+Used the barplot to display the different types of payment methods being provided by the farmers market.
+
+![alt-tag](https://user-images.githubusercontent.com/42359693/68339947-89d7f900-00b3-11ea-8ec9-b9a4b28d9c64.png)
+
+‘Payment by credit’ is the most provided mode of payment throughout the farmers market in a span of 10 years.
+
+Used the grouped bar plot to show the comparison of different payment methods provided by the Farmers market in various regions across the United States.
+
+![alt-tag](https://user-images.githubusercontent.com/42359693/68340157-e1766480-00b3-11ea-8e33-985365cf4fd0.png)
+
+Throughout all the regions of United States in a span of 10 years, ‘Payment by credit’ is the most provided modes of payment in the farmers market.
