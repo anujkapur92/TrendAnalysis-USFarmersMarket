@@ -10,4 +10,4 @@ R and R Studio
 ## Distribution of Farmers Market
 Used the usmap library to show the distribution of farmers market throughout the United States.
 
-https://user-images.githubusercontent.com/42359693/68337591-d240e800-00ae-11ea-9ee2-10700ecd4963.png
+![alt tag](https://user-images.githubusercontent.com/42359693/68337591-d240e800-00ae-11ea-9ee2-10700ecd4963.png)
